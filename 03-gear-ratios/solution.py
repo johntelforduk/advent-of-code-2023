@@ -18,6 +18,11 @@ schematic.append(extra_row)
 ic(schematic)
 
 this_number, number_sum = 0, 0
+
+# Key = Co-ordinates of a gear, eg. (3, 1).
+# Value = list of numbers adjacent to that gear, eg [467, 35].
+gears = {}
+
 for y in range(len(schematic)):
     for x in range(len(schematic[y])):
         if schematic[y][x].isdigit():
@@ -32,8 +37,22 @@ for y in range(len(schematic)):
                     symbol_found = symbol_found or is_symbol(schematic[sy][sx])
                     ic(this_number, sx, sy, symbol_found)
 
+                    # Check for gear.
+                    if schematic[sy][sx] == '*':
+                        if (sx, sy) in gears:
+                            gears[(sx, sy)].append(this_number)
+                        else:
+                            gears[(sx, sy)] = [this_number]
+                        ic(gears)
+
             if symbol_found:
                 number_sum += this_number
             this_number = 0
 
-ic(number_sum)
+# Add up the gear ratios.
+ratio_sum = 0
+for gear in gears:
+    if len(gears[gear]) == 2:
+        ratio_sum += gears[gear][0] * gears[gear][1]
+
+ic(number_sum, ratio_sum)
