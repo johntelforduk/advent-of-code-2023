@@ -1,4 +1,4 @@
-# Advent of code day 5, If You Give A Seed A Fertilizer..
+# Advent of code day 5, part 1. If You Give A Seed A Fertilizer.
 # https://adventofcode.com/2023/day/5
 
 from icecream import ic
@@ -65,9 +65,6 @@ almanac[(map_from, map_to)] = mappings
 
 ic(seeds, almanac, source_to_destination)
 
-# for test in range(110):
-#     correspondence = correspond(source=test, mappings=almanac[("seed", "soil")])
-#     ic(test, correspondence)
 best = None
 
 for source in seeds:
