@@ -3,7 +3,7 @@
 
 from icecream import ic
 
-with open('input.txt', 'r') as file:
+with open('input2.txt', 'r') as file:
     document = file.read()
 
 rows_lists = []
