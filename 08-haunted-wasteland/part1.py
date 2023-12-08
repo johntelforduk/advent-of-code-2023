@@ -1,4 +1,4 @@
-# Advent of code day 8, Haunted Wasteland
+# Advent of code day 8, Haunted Wasteland.
 # https://adventofcode.com/2023/day/8
 
 from icecream import ic
