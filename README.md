@@ -4,4 +4,5 @@ Solutions to [AOC puzzles](https://adventofcode.com/2023).
 ### Installation
 ```commandline
 pip install icecream
+pip install pygame
 ```
