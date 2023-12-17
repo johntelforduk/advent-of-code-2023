@@ -1,4 +1,4 @@
-# Advent of Code day 13, Point of Incidence.
+# Advent of Code day 13, part 1: Point of Incidence.
 # https://adventofcode.com/2023/day/13
 
 from icecream import ic
@@ -21,31 +21,19 @@ def check_pair_of_rows(pattern: dict, y1: int, y2: int) -> bool:
 
 
 def check_row_reflection(pattern: dict, y: int) -> bool:
-    # ic(check_pair_of_rows(pattern, 4, 5))
-    # ic(check_pair_of_rows(pattern, 3, 6))
-    # ic(check_pair_of_rows(pattern, 2, 7))
-    # _, num_rows = max(pattern)
-    # if y < 1 or y > num_rows:          # Top and bottom rows can't be place of reflection.
-    #     return False
-
     y1, y2 = y, y + 1
-    # _, height = max(pattern)
     while y1 >= 1:
-        # ic(y1, y2)
         if check_pair_of_rows(pattern, y1, y2) is False:
             return False
         y1 -= 1
         y2 += 1
     return True
-    # ic(max(pattern))
 
 
 def row_reflection_score(pattern) -> int:
     _, num_rows = max(pattern)
-    ic(num_rows)
     total = 0
     for check_y in range(1, num_rows):
-        ic(check_y)
         if check_row_reflection(pattern, check_y):
             total += check_y
     return total
@@ -72,16 +60,11 @@ for pattern_str in patterns.split('\n\n'):
             x += 1
         y += 1
 
-    # ic(min(pattern), max(pattern))
     total += 100 * row_reflection_score(pattern)
 
     rotated = rotate(pattern)
-    # ic(rotated)
-
-    # ic(min(rotated), max(rotated))
     total += row_reflection_score(rotated)
 
-ic(row_reflection_score(pattern))
-
+# ic(row_reflection_score(pattern))
 
 ic(total)
