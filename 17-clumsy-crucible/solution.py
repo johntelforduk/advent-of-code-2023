@@ -57,6 +57,7 @@ for v in grid:
 source = (0, 0, 0, 0, 0)
 
 dist[source] = 0
+
 q[source] = 0
 small_q[source] = 0
 
@@ -69,10 +70,15 @@ while len(q) != 0:
         ic(len_q)
 
 #     # u ← vertex in Q with min dist[u]
-    u = min(q, key=q.get)
+    if len(small_q) != 0:
+        u = min(small_q, key=q.get)
+    else:
+        u = min(q, key=q.get)
 
 #     # remove u from Q
     del q[u]
+    if u in small_q:
+        del small_q[u]
 #
 #     # for each neighbor v of u still in Q:
     x, y, tx, ty, consecutive = u
@@ -100,6 +106,7 @@ while len(q) != 0:
                     dist[v] = alt
                     if v in q:
                         q[v] = alt
+                        small_q[v] = alt
                     # prev[v] ← u
 
                     prev[v] = u
