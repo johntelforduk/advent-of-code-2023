@@ -19,10 +19,10 @@ def combinations(current_workflow: str,
 
     ic(current_workflow, current_rule_no)
 
-    if current_workflow == 'A':
+    if current_workflow == 'A':                     # Accepted :)
         return calc_product(ranges)
 
-    if current_workflow == 'R':
+    if current_workflow == 'R':                     # Rejected :(
         return 0
 
     current_rule = workflows[current_workflow][current_rule_no]
@@ -74,40 +74,8 @@ def combinations(current_workflow: str,
                                current_rule_no=current_rule_no + 1,
                                ranges=under_ranges, workflows=workflows))
 
-        #     if categories[current_rule['category']] < current_rule['threshold']:
-        #         if current_rule['target'] in 'AR':
-        #             decision = current_rule['target']
-        #         else:
-        #             current_workflow = current_rule['target']
-        #             current_rule_no = 0
-        #     else:
-        #         current_rule_no += 1
-        #
-        # elif current_rule['operation'] == '>':
-        #     if categories[current_rule['category']] >= current_rule['threshold']:
-        #         if current_rule['target'] in 'AR':
-        #             decision = current_rule['target']
-        #         else:
-        #             current_workflow = current_rule['target']
-        #             current_rule_no = 0
-        #     else:
-        #         current_rule_no += 1
-        #
-        # # elif current_rule['operation'] == 'goto':
-        # #     current_workflow = current_rule['target']
-        # #     current_rule_no = 0
-        #
-        # else:
-        #     current_rule_no += 1
-        #     current_rule = workflows[current_workflow].rules[current_rule_no]
-        #
-        # # if decision is None:
-        # #     current_rule = workflows[current_workflow].rules[current_rule_no]
-        #
-        #
 
-
-with open('test.txt', 'r') as file:
+with open('input.txt', 'r') as file:
     input_str = file.read()
 
 workflows_str, _ = input_str.split('\n\n')          # Don't need the Parts anymore.
