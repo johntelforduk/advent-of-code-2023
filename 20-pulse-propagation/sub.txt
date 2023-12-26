@@ -1,0 +1,64 @@
+&vt -> tj
+&sk -> tj
+&xc -> tj
+&kk -> tj
+
+
+
+
+
+ config['vt'].memory: {'nf': 'high'}
+    config['sk'].memory: {'pm': 'high'}
+    config['xc'].memory: {'jd': 'high'}
+    config['kk'].memory: {'qm': 'high'}
+
+
+
+
+
+
+
+
+
+
+
+
+    config['nf'].memory: {'cz': 'high',
+                          'dl': 'high',
+                          'hl': 'low',
+                          'hm': 'high',
+                          'ht': 'high',
+                          'kx': 'low',
+                          'pn': 'high',
+                          'sv': 'low',
+                          'zf': 'high'}
+    config['pm'].memory: {'gv': 'high',
+                          'lg': 'low',
+                          'lq': 'low',
+                          'mt': 'high',
+                          'sr': 'high',
+                          'st': 'low',
+                          'xg': 'high',
+                          'zv': 'low'}
+    config['jd'].memory: {'gb': 'high',
+                          'gh': 'high',
+                          'mh': 'high',
+                          'nh': 'high',
+                          'pb': 'low',
+                          'qq': 'high',
+                          'rs': 'low',
+                          'rv': 'low',
+                          'sg': 'high'}
+    config['qm'].memory: {'bf': 'low',
+                          'bh': 'high',
+                          'dr': 'low',
+                          'fb': 'high',
+                          'fc': 'high',
+                          'hh': 'high',
+                          'sm': 'low',
+                          'vv': 'high',
+                          'xb': 'high'}
+
+
+68,719,476,736 too low
+137,438,953,472 too low
