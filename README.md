@@ -6,6 +6,7 @@ Solutions to [AOC puzzles](https://adventofcode.com/2023).
 pip install icecream
 pip install pygame
 pip install numpy
+pip install matplotlib
 ```
 ### Day 10: Pipe Maze
 Visualisation for part 1.
