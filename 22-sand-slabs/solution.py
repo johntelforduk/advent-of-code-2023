@@ -28,12 +28,23 @@ def drop(cube: tuple, settled: set) -> tuple:
     settled_try = settled.copy()
     none_lost = len(settled_try) + len(occupies(cube))
 
-    while dz1 >= 0 and none_lost == len(settled_try.union(occupies((x1, y1, dz1, x2, y2, dz2, colour, cube_pos)))):
+    while dz1 >= 1 and none_lost == len(settled_try.union(occupies((x1, y1, dz1, x2, y2, dz2, colour, cube_pos)))):
         dz1 -= 1
         dz2 -= 1
         # settled_try = settled.copy()
         # settled_try = settled_try.union(occupies((x1, y1, dz1, x2, y2, dz2, colour)))
     return x1, y1, dz1 + 1, x2, y2, dz2 + 1, colour, cube_pos
+
+
+def drop_the_cuboids(cubes: list) -> list:
+    dropped = []
+    settled = set()
+
+    for i in range(len(cubes)):
+        dropped_cube = drop(cubes[i], settled)
+        dropped.append(dropped_cube)
+        settled = settled.union(occupies(dropped_cube))
+    return dropped
 
 
 def sort_cubes(cubes_copy: list) -> list:
@@ -54,26 +65,6 @@ def sort_cubes(cubes_copy: list) -> list:
 
         sorted_cubes.append(cubes_copy.pop(pos))
     return sorted_cubes
-
-
-# def int_to_zero_one(i: int) -> float:
-#     return float('0.' + str(i))
-
-
-# def pick_colour(cube: tuple) -> tuple:
-#     x1, y1, z1, x2, y2, z2 = cube
-#     seed = 147
-#     hash = 1
-#     pos = 1
-#     for i in [x1, y1, z1, x2, y2, z2]:
-#         hash *= (i + 1) * seed
-#         seed *= 147
-#
-#     h2 = hash * 147
-#     h3 = h2 * 147
-#     # ic(hash, h2, h3)
-#
-#     return int_to_zero_one(hash), int_to_zero_one(h2), int_to_zero_one(h3)
 
 
 def plot(cubes: list, mx, my, mz):
@@ -103,18 +94,15 @@ def plot(cubes: list, mx, my, mz):
         # Plot faces.
         ax.add_collection3d(Poly3DCollection(faces,
                                              facecolors=colour,
-                                             linewidths=0.1,
+                                             linewidths=0.2,
                                              edgecolors='black',
                                              alpha=1))
 
     ax.set_axis_off()
-    # ax.set_xlabel('X')
-    # ax.set_ylabel('Y')
-    # ax.set_zlabel('Z')
     plt.show()
 
 
-with open('test.txt', 'r') as file:
+with open('input.txt', 'r') as file:
     bricks_str = file.read()
 
 random.seed(30)
@@ -134,8 +122,23 @@ for line in bricks_str.split('\n'):
     cubes.append((x1, y1, z1, x2 + 1, y2 + 1, z2 + 1, colour, cube_no))
     cube_no += 1
 
+c1 = 0
+for c in cubes:
+    c1 += len(occupies(c))
+ic(c1)
+
+
 cubes = sort_cubes(cubes)
-ic(cubes)
+c2 = 0
+for c in cubes:
+    c2 += len(occupies(c))
+ic(c2)
+
+# for _, _, z, _, _, _, _, _ in cubes:
+#     ic(z)
+
+
+# ic(cubes)
 
 min_x, max_x, min_y, max_y, min_z, max_z = 100000, -100000, 100000, -100000, 100000, -100000
 for x1, y1, z1, x2, y2, z2, _, _ in cubes:
@@ -146,16 +149,49 @@ for x1, y1, z1, x2, y2, z2, _, _ in cubes:
     max_y = max(max_y, y2)
     max_z = max(max_z, z2)
 
-ic(min_x, max_x, min_y, max_y, min_z, max_z)
+# ic(min_x, max_x, min_y, max_y, min_z, max_z)
 
-ic(occupies(cubes[0]))
+# ic(occupies(cubes[0]))
 
-dropped = []
-settled = set()
+# settled = set()
 
-for i in range(len(cubes)):
-    dropped_cube = drop(cubes[i], settled)
-    dropped.append(dropped_cube)
-    settled = settled.union(occupies(dropped_cube))
+dropped = drop_the_cuboids(cubes)
+
+c3 = 0
+for c in dropped:
+    c3 += len(occupies(c))
+ic(c3)
+
+
+
+# Key = co-ordinates of a cube. Value = number of the cuboid that occupies it.
+occupation = {}
+for cuboid in dropped:
+    _, _, _, _, _, _, _, cube_pos = cuboid
+    for (x, y, z) in occupies(cuboid):
+        occupation[(x, y, z)] = cube_pos
+# ic(occupation)
+
+# Key = cuboid number. Value = set of cuboid numbers for cuboids that support it.
+supported_by = {}
+for cuboid in dropped:
+    _, _, _, _, _, _, _, cube_no = cuboid
+    for x, y, z in occupies(cuboid):
+        if (x, y, z - 1) in occupation:
+            if occupation[(x, y, z - 1)] != cube_no:
+                if cube_no not in supported_by:
+                    supported_by[cube_no] = set()
+                supported_by[cube_no].add(occupation[(x, y, z - 1)])
+
+
+ic(supported_by)
+
+singletons = set()
+for cuboid in supported_by:
+    if len(supported_by[cuboid]) == 1:
+        singletons = singletons.union(supported_by[cuboid])
+
+ic(singletons)
+ic(len(dropped) - len(singletons))
 
 plot(dropped, max_x, max_y, max_z)
