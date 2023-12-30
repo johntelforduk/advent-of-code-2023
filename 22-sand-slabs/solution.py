@@ -8,8 +8,8 @@ import numpy as np
 import random
 
 
-def occupies(cube: tuple) -> set:
-    x1, y1, z1, x2, y2, z2, _, _ = cube
+def occupies(cuboid: tuple) -> set:
+    x1, y1, z1, x2, y2, z2, _, _ = cuboid
     occ = set()
     for x in range(x1, x2):
         for y in range(y1, y2):
@@ -18,43 +18,41 @@ def occupies(cube: tuple) -> set:
     return occ
 
 
-def drop(cube: tuple, settled: set) -> tuple:
-    x1, y1, z1, x2, y2, z2, colour, cube_pos = cube
+def drop(cuboid: tuple, settled: set) -> tuple:
+    x1, y1, z1, x2, y2, z2, colour, cube_no = cuboid
     if z1 == 1:
-        return cube
+        return cuboid
 
     dz1, dz2 = z1, z2
 
     settled_try = settled.copy()
-    none_lost = len(settled_try) + len(occupies(cube))
+    none_lost = len(settled_try) + len(occupies(cuboid))
 
-    while dz1 >= 1 and none_lost == len(settled_try.union(occupies((x1, y1, dz1, x2, y2, dz2, colour, cube_pos)))):
+    while dz1 >= 1 and none_lost == len(settled_try.union(occupies((x1, y1, dz1, x2, y2, dz2, colour, cube_no)))):
         dz1 -= 1
         dz2 -= 1
-        # settled_try = settled.copy()
-        # settled_try = settled_try.union(occupies((x1, y1, dz1, x2, y2, dz2, colour)))
-    return x1, y1, dz1 + 1, x2, y2, dz2 + 1, colour, cube_pos
+    return x1, y1, dz1 + 1, x2, y2, dz2 + 1, colour, cube_no
 
 
-def drop_the_cuboids(cubes: list) -> list:
+def drop_the_cuboids(cuboids: list) -> list:
     dropped = []
     settled = set()
 
-    for i in range(len(cubes)):
-        dropped_cube = drop(cubes[i], settled)
-        dropped.append(dropped_cube)
-        settled = settled.union(occupies(dropped_cube))
+    for i in range(len(cuboids)):
+        dropped_cuboid = drop(cuboids[i], settled)
+        dropped.append(dropped_cuboid)
+        settled = settled.union(occupies(dropped_cuboid))
     return dropped
 
 
-def sort_cubes(cubes_copy: list) -> list:
-    cubes_copy = cubes.copy()
-    sorted_cubes = []
-    while len(cubes_copy) != 0:
+def sort_cuboids(cuboids: list) -> list:
+    cuboids_copy = cuboids.copy()
+    sorted_cuboids = []
+    while len(cuboids_copy) != 0:
         i = 0
         lowest = None
         pos = None
-        for _, _, y, _, _, _, _, _ in cubes_copy:
+        for _, _, y, _, _, _, _, _ in cuboids_copy:
             if lowest is None:
                 lowest = y
                 pos = i
@@ -63,11 +61,11 @@ def sort_cubes(cubes_copy: list) -> list:
                 pos = i
             i += 1
 
-        sorted_cubes.append(cubes_copy.pop(pos))
-    return sorted_cubes
+        sorted_cuboids.append(cuboids_copy.pop(pos))
+    return sorted_cuboids
 
 
-def plot(cubes: list, mx, my, mz):
+def plot(cuboids: list, mx, my, mz):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -77,7 +75,7 @@ def plot(cubes: list, mx, my, mz):
 
     ax.set_aspect('equal')
 
-    for c in cubes:
+    for c in cuboids:
         x1, y1, z1, x2, y2, z2, colour, _ = c
         v = np.array([[x1, y1, z1], [x2, y1, z1], [x2, y2, z1], [x1, y2, z1],
                       [x1, y1, z2], [x2, y1, z2], [x2, y2, z2], [x1, y2, z2]])
@@ -107,8 +105,8 @@ with open('input.txt', 'r') as file:
 
 random.seed(30)
 
-cubes = []
-cube_no = 1
+cuboids = []
+cuboid_no = 1
 for line in bricks_str.split('\n'):
     origin, destination = line.split('~')
     xa, ya, za = [int(i) for i in origin.split(',')]
@@ -119,20 +117,20 @@ for line in bricks_str.split('\n'):
     z1, z2 = min(za, zb), max(za, zb)
     colour = (random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1))
 
-    cubes.append((x1, y1, z1, x2 + 1, y2 + 1, z2 + 1, colour, cube_no))
-    cube_no += 1
+    cuboids.append((x1, y1, z1, x2 + 1, y2 + 1, z2 + 1, colour, cuboid_no))
+    cuboid_no += 1
 
-c1 = 0
-for c in cubes:
-    c1 += len(occupies(c))
-ic(c1)
+# c1 = 0
+# for c in cubes:
+#     c1 += len(occupies(c))
+# ic(c1)
 
 
-cubes = sort_cubes(cubes)
-c2 = 0
-for c in cubes:
-    c2 += len(occupies(c))
-ic(c2)
+cuboids = sort_cuboids(cuboids)
+# c2 = 0
+# for c in cubes:
+#     c2 += len(occupies(c))
+# ic(c2)
 
 # for _, _, z, _, _, _, _, _ in cubes:
 #     ic(z)
@@ -141,7 +139,7 @@ ic(c2)
 # ic(cubes)
 
 min_x, max_x, min_y, max_y, min_z, max_z = 100000, -100000, 100000, -100000, 100000, -100000
-for x1, y1, z1, x2, y2, z2, _, _ in cubes:
+for x1, y1, z1, x2, y2, z2, _, _ in cuboids:
     min_x = min(min_x, x1)
     min_y = min(min_y, y1)
     min_z = min(min_z, z1)
@@ -155,33 +153,33 @@ for x1, y1, z1, x2, y2, z2, _, _ in cubes:
 
 # settled = set()
 
-dropped = drop_the_cuboids(cubes)
+dropped = drop_the_cuboids(cuboids)
 
-c3 = 0
-for c in dropped:
-    c3 += len(occupies(c))
-ic(c3)
+# c3 = 0
+# for c in dropped:
+#     c3 += len(occupies(c))
+# ic(c3)
 
 
 
 # Key = co-ordinates of a cube. Value = number of the cuboid that occupies it.
 occupation = {}
 for cuboid in dropped:
-    _, _, _, _, _, _, _, cube_pos = cuboid
+    _, _, _, _, _, _, _, cuboid_no = cuboid
     for (x, y, z) in occupies(cuboid):
-        occupation[(x, y, z)] = cube_pos
+        occupation[(x, y, z)] = cuboid_no
 # ic(occupation)
 
 # Key = cuboid number. Value = set of cuboid numbers for cuboids that support it.
 supported_by = {}
 for cuboid in dropped:
-    _, _, _, _, _, _, _, cube_no = cuboid
+    _, _, _, _, _, _, _, cuboid_no = cuboid
     for x, y, z in occupies(cuboid):
         if (x, y, z - 1) in occupation:
-            if occupation[(x, y, z - 1)] != cube_no:
-                if cube_no not in supported_by:
-                    supported_by[cube_no] = set()
-                supported_by[cube_no].add(occupation[(x, y, z - 1)])
+            if occupation[(x, y, z - 1)] != cuboid_no:
+                if cuboid_no not in supported_by:
+                    supported_by[cuboid_no] = set()
+                supported_by[cuboid_no].add(occupation[(x, y, z - 1)])
 
 
 ic(supported_by)
