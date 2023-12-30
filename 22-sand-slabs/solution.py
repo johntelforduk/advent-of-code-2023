@@ -65,9 +65,15 @@ def sort_cuboids(cuboids: list) -> list:
     return sorted_cuboids
 
 
-def plot(cuboids: list, mx, my, mz):
+def plot(cuboids: list):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
+
+    mx, my, mz = 0, 0, 0
+    for _, _, _, x2, y2, z2, _, _ in cuboids:
+        mx = max(mx, x2)
+        my = max(my, y2)
+        mz = max(mz, z2)
 
     ax.set_xlim(0, mx)
     ax.set_ylim(0, my)
@@ -120,47 +126,8 @@ for line in bricks_str.split('\n'):
     cuboids.append((x1, y1, z1, x2 + 1, y2 + 1, z2 + 1, colour, cuboid_no))
     cuboid_no += 1
 
-# c1 = 0
-# for c in cubes:
-#     c1 += len(occupies(c))
-# ic(c1)
-
-
 cuboids = sort_cuboids(cuboids)
-# c2 = 0
-# for c in cubes:
-#     c2 += len(occupies(c))
-# ic(c2)
-
-# for _, _, z, _, _, _, _, _ in cubes:
-#     ic(z)
-
-
-# ic(cubes)
-
-min_x, max_x, min_y, max_y, min_z, max_z = 100000, -100000, 100000, -100000, 100000, -100000
-for x1, y1, z1, x2, y2, z2, _, _ in cuboids:
-    min_x = min(min_x, x1)
-    min_y = min(min_y, y1)
-    min_z = min(min_z, z1)
-    max_x = max(max_x, x2)
-    max_y = max(max_y, y2)
-    max_z = max(max_z, z2)
-
-# ic(min_x, max_x, min_y, max_y, min_z, max_z)
-
-# ic(occupies(cubes[0]))
-
-# settled = set()
-
 dropped = drop_the_cuboids(cuboids)
-
-# c3 = 0
-# for c in dropped:
-#     c3 += len(occupies(c))
-# ic(c3)
-
-
 
 # Key = co-ordinates of a cube. Value = number of the cuboid that occupies it.
 occupation = {}
@@ -168,7 +135,6 @@ for cuboid in dropped:
     _, _, _, _, _, _, _, cuboid_no = cuboid
     for (x, y, z) in occupies(cuboid):
         occupation[(x, y, z)] = cuboid_no
-# ic(occupation)
 
 # Key = cuboid number. Value = set of cuboid numbers for cuboids that support it.
 supported_by = {}
@@ -181,15 +147,11 @@ for cuboid in dropped:
                     supported_by[cuboid_no] = set()
                 supported_by[cuboid_no].add(occupation[(x, y, z - 1)])
 
-
-ic(supported_by)
-
 singletons = set()
 for cuboid in supported_by:
     if len(supported_by[cuboid]) == 1:
         singletons = singletons.union(supported_by[cuboid])
 
-ic(singletons)
 ic(len(dropped) - len(singletons))
 
-plot(dropped, max_x, max_y, max_z)
+plot(dropped)
