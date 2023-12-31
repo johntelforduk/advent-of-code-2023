@@ -65,6 +65,28 @@ def sort_cuboids(cuboids: list) -> list:
     return sorted_cuboids
 
 
+def chain_reaction(cuboid_no: int, supported_by, supports) -> int:
+    count = 0
+    moved = [cuboid_no]
+
+    # supported_by_copy = supported_by.copy()
+    supported_by_copy = {}
+    for i in supported_by:
+        supported_by_copy[i] = supported_by[i].copy()
+
+    while len(moved) != 0:
+        this_move = moved.pop(0)
+        count += 1
+        if this_move in supports:
+            for it_supports in supports[this_move]:
+                if this_move in supported_by_copy[it_supports]:
+                    supported_by_copy[it_supports].remove(this_move)
+                    if len(supported_by_copy[it_supports]) == 0:
+                        moved.append(it_supports)
+
+    return count - 1                # Off by one due to can't count itself.
+
+
 def plot(cuboids: list):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -153,5 +175,19 @@ for cuboid in supported_by:
         singletons = singletons.union(supported_by[cuboid])
 
 ic(len(dropped) - len(singletons))
+
+# Key = cuboid number. Value = set of cuboids that it supports.
+supports = {}
+for cuboid_no in supported_by:
+    for supporter in supported_by[cuboid_no]:
+        if supporter not in supports:
+            supports[supporter] = set()
+        supports[supporter].add(cuboid_no)
+
+chain = 0
+for _, _, _, _, _, _, _, cuboid_no in dropped:
+    chain += chain_reaction(cuboid_no=cuboid_no, supported_by=supported_by, supports=supports)
+    ic(cuboid_no, chain)
+ic(chain)
 
 plot(dropped)
