@@ -7,6 +7,7 @@ pip install icecream
 pip install pygame
 pip install numpy
 pip install matplotlib
+pip install sympy
 ```
 ### Day 10: Pipe Maze
 Visualisation for part 1.
