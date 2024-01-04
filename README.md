@@ -8,6 +8,8 @@ pip install pygame
 pip install numpy
 pip install matplotlib
 pip install sympy
+pip install networkx
+pip install scipy
 ```
 ### Day 10: Pipe Maze
 Visualisation for part 1.
@@ -27,4 +29,7 @@ Detail of bottom of stack.
 
 ![Day 22, detail](./22-sand-slabs/d22_2.png)
 
+### Day 25: Snowverload 
+Visualisation of the wiring diagram.
 
+![Day 25, wiriing diagram](./25-snowverload/d25.png)
